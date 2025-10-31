@@ -8,12 +8,10 @@
 
 ## 🛠️ Tecnologías y herramientas
 
-**Lenguajes y frameworks:**
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=java,python,cpp,sql,javafx,junit&theme=dark" />
+  <img src="https://skillicons.dev/icons?i=java,python,cpp,postgresql,javafx,junit&theme=dark" />
 </p>
 
-**Herramientas y entornos:**
 <p align="center">
   <img src="https://skillicons.dev/icons?i=git,linux,vscode,idea,arcgis&theme=dark" />
 </p>
