@@ -8,18 +8,16 @@
 
 ## 🛠️ Tecnologías y herramientas
 
-## 🛠️ Tecnologías y herramientas
-
-**Lenguajes:**
-![Java](https://img.shields.io/badge/Java-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
-![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white)
-![C++](https://img.shields.io/badge/C++-00599C?style=flat-square&logo=cplusplus&logoColor=white)
-![SQL](https://img.shields.io/badge/SQL-003B57?style=flat-square&logo=postgresql&logoColor=white)
-
-**Herramientas:**
-<p align="left">
-  <img src="https://skillicons.dev/icons?i=git,linux,vscode,idea,javafx,junit,arcgis" />
+**Lenguajes y frameworks:**
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=java,python,cpp,sql,javafx,junit&theme=dark" />
 </p>
+
+**Herramientas y entornos:**
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=git,linux,vscode,idea,arcgis&theme=dark" />
+</p>
+
 
 ## 📊 Estadísticas
 ![Santiago's GitHub stats](https://github-readme-stats.vercel.app/api?username=santiagohb2830&show_icons=true&theme=radical)
