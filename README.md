@@ -10,7 +10,7 @@
 
 **Lenguajes y frameworks:**
 <p align="center">
-  <img src="https://skillicons.dev/icons?i=java,python,cpp, &theme=dark" />
+  <img src="https://skillicons.dev/icons?i=java,python,cpp,&theme=dark" />
 </p>
 
 **Herramientas y entornos:**
