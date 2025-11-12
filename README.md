@@ -6,7 +6,7 @@
   </a>
 </p>
 
-## 🛠️ Tecnologías y herramientas
+## Tecnologías y herramientas
 
 **Lenguajes y frameworks:**
 <p align="center">
@@ -19,14 +19,9 @@
 </p>
 
 
-## 📊 Estadísticas
-![Santiago's GitHub stats](https://github-readme-stats.vercel.app/api?username=santiagohb2830&show_icons=true&theme=radical)
-![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=santiagohb2830&layout=compact&theme=radical)
-
-
-## 📫 Contáctame
-- ✉️ Email: santiagohb2830@gmail.com  
-- 💼 LinkedIn: [linkedin.com/in/santiagohb2830](https://linkedin.com/in/santiagohb2830)  
+## Contáctame
+- Email: santiagohb2830@gmail.com  
+- LinkedIn: [linkedin.com/in/santiagohb2830](https://linkedin.com/in/santiagohb2830)  
 
 
 
