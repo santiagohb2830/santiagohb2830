@@ -196,21 +196,6 @@ def obtener_estadisticas():
 # ----------------------------------------------------------------------
 # Construccion del SVG
 # ----------------------------------------------------------------------
-def _segmentos_linea(item, est):
-    """Devuelve la lista de (texto, clase) de una linea del panel, con ancho fijo."""
-    tipo = item[0]
-    if tipo == "blank":
-        return None
-    if tipo == "seccion":
-        nombre = item[1]
-        resto = ANCHO_INFO - 2 - len(nombre) - 1
-        return [("- ", "d"), (nombre + " ", "h"), ("-" * resto, "d")]
-    clave = item[1]
-    valor = est[item[2]] if tipo == "stat" else item[2]
-    puntos = max(2, ANCHO_INFO - 2 - len(clave) - 1 - len(valor) - 2)
-    return [(". ", "d"), (clave + ":", "k"), (" " + "." * puntos + " ", "d"), (valor, "v")]
-
-
 def construir_svg(lineas_ascii, tema, est, animado=True):
     c = TEMAS[tema]
     filas = len(lineas_ascii)
@@ -256,7 +241,7 @@ def construir_svg(lineas_ascii, tema, est, animado=True):
     def clip(id_, y, inicio):
         if not animado:
             return ""
-        valores = ";".join(f"{k * CW:.1f}" for k in range(ANCHO_INFO + 1))
+        valores = ";".join(f"{k * CW:.1f}" for k in range(ANCHO_INFO + 5))
         return (
             f'<clipPath id="{id_}"><rect x="{x_info:.1f}" y="{y - FS:.1f}" width="0" height="{FS + 6}">'
             f'<animate attributeName="width" values="{valores}" calcMode="discrete" '
@@ -301,27 +286,64 @@ def construir_svg(lineas_ascii, tema, est, animado=True):
             f'dur="{dur_barrido + 0.1:.2f}s" begin="0s" fill="freeze"/></g>'
         )
 
-    # Panel derecho
-    def texto_info(id_clip, y, segmentos):
-        tspans = "".join(
-            f'<tspan class="{cl}">{html.escape(tx, quote=False)}</tspan>' for tx, cl in segmentos
-        )
-        cp = f' clip-path="url(#{id_clip})"' if animado else ""
-        return (
-            f'<text x="{x_info:.1f}" y="{y:.1f}" textLength="{ANCHO_INFO * CW:.1f}" '
-            f'lengthAdjust="spacing" xml:space="preserve"{cp}>{tspans}</text>'
-        )
+    # Panel derecho. Cada fila coloca sus partes en posiciones absolutas:
+    # la clave a la izquierda, el valor pegado al borde derecho y la linea de
+    # puntos dibujada como figura. Asi no depende del ancho exacto de la fuente
+    # que tenga cada navegador.
+    x_der = x_info + ANCHO_INFO * CW   # borde derecho del panel
+    HOLGURA = 1.06                     # margen por si la fuente resulta mas ancha
 
-    resto = ANCHO_INFO - len(TITULO) - 1
-    p.append(texto_info("t0", y_info0, [(TITULO + " ", "h"), ("-" * resto, "d")]))
+    def esc(t):
+        return html.escape(t, quote=False)
+
+    def fila(id_clip, y, item):
+        tipo = item[0]
+        cp = f' clip-path="url(#{id_clip})"' if animado else ""
+        guion = f'stroke="{c["tenue"]}"'
+        if tipo in ("titulo", "seccion"):
+            prefijo = "- " if tipo == "seccion" else ""
+            nombre = item[1]
+            texto = (
+                f'<text y="{y:.1f}" xml:space="preserve">'
+                + (f'<tspan x="{x_info:.1f}" class="d">{prefijo}</tspan><tspan class="h">{esc(nombre)}</tspan>'
+                   if prefijo else f'<tspan x="{x_info:.1f}" class="h">{esc(nombre)}</tspan>')
+                + "</text>"
+            )
+            x1 = x_info + (len(prefijo) + len(nombre)) * CW * HOLGURA + 8
+            linea = (
+                f'<line x1="{x1:.1f}" x2="{x_der:.1f}" y1="{y - 4:.1f}" y2="{y - 4:.1f}" '
+                f'{guion} stroke-width="1"/>'
+            )
+            return f"<g{cp}>{texto}{linea}</g>"
+
+        clave = item[1]
+        valor = est[item[2]] if tipo == "stat" else item[2]
+        texto = (
+            f'<text y="{y:.1f}" xml:space="preserve">'
+            f'<tspan x="{x_info:.1f}" class="d">. </tspan>'
+            f'<tspan class="k">{esc(clave)}:</tspan>'
+            f'<tspan x="{x_der:.1f}" text-anchor="end" class="v">{esc(valor)}</tspan>'
+            "</text>"
+        )
+        x1 = x_info + (2 + len(clave) + 1) * CW * HOLGURA + 8
+        x2 = x_der - len(valor) * CW * HOLGURA - 8
+        puntos = ""
+        if x2 - x1 >= 10:
+            puntos = (
+                f'<line x1="{x1:.1f}" x2="{x2:.1f}" y1="{y - 2.5:.1f}" y2="{y - 2.5:.1f}" '
+                f'{guion} stroke-width="1.5" stroke-linecap="round" '
+                f'stroke-dasharray="0.01 {CW:.1f}"/>'
+            )
+        return f"<g{cp}>{texto}{puntos}</g>"
+
+    p.append(fila("t0", y_info0, ("titulo", TITULO)))
     for i, item in enumerate(PERFIL, start=1):
-        segs = _segmentos_linea(item, est)
-        if segs:
-            p.append(texto_info(f"t{i}", y_info0 + i * LH_INFO, segs))
+        if item[0] != "blank":
+            p.append(fila(f"t{i}", y_info0 + i * LH_INFO, item))
 
     # Cursor parpadeante al final
     y_ult = y_info0 + len(PERFIL) * LH_INFO
-    x_cur = x_info + ANCHO_INFO * CW + 4
+    x_cur = x_der + 4
     if animado:
         p.append(
             f'<rect x="{x_cur:.1f}" y="{y_ult - FS + 1:.1f}" width="7" height="{FS}" fill="{c["acento"]}" opacity="0">'
