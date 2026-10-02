@@ -31,18 +31,16 @@ TOKEN = os.environ.get("GITHUB_TOKEN", "")
 TITULO = "santiago@hernandez"
 
 PERFIL = [
-    ("kv", "SO", "Windows, Ubuntu Server, macOS"),
-    ("kv","Edad", "21 años"),
+    ("kv", "SO", "Windows, Ubuntu Server"),
     ("kv", "Host", "Pontificia Universidad Javeriana"),
     ("kv", "Kernel", "Ingeniería de Sistemas, 8vo semestre"),
     ("kv", "Enfoque", "Ciencia de Datos"),
     ("kv", "Cargo", "AI Quality Analyst en Turing"),
-    ("kv", "IDE", "VS Code, IntelliJ IDEA,"),
-    ("kv", "Herramientas", "Git, Docker, Postman, Google Colab, ClaudeCode, ChatGPT, Excel, Power BI, ArcGIS"),
+    ("kv", "IDE", "VS Code, IntelliJ IDEA"),
     ("blank",),
-    ("kv", "Lenguajes.Programación", "Python, Java, C++, SQL"),
+    ("kv", "Lenguajes.Programación", "Python, Java, C++"),
     ("kv", "Lenguajes.Datos", "DAX, Power BI, ArcGIS"),
-    ("kv", "Lenguajes.Naturales", "Español, Inglés"),
+    ("kv", "Lenguajes.Reales", "Español, Inglés"),
     ("blank",),
     ("kv", "Pasatiempos.Software", "Bots y automatizaciones con IA"),
     ("kv", "Pasatiempos.Hardware", "Electrónica DIY, mecánica de moto"),
@@ -53,6 +51,7 @@ PERFIL = [
     ("blank",),
     ("seccion", "GitHub"),
     ("stat", "Repos", "repos"),
+    ("stat", "Contribuido en", "contribuidos"),
     ("stat", "Commits", "commits"),
     ("stat", "Estrellas", "estrellas"),
     ("stat", "Seguidores", "seguidores"),
@@ -138,8 +137,26 @@ def _get(url):
         return json.load(r)
 
 
-def obtener_estadísticas():
-    est = {"repos": "-", "commits": "-", "estrellas": "-", "seguidores": "-"}
+def _graphql(consulta):
+    cuerpo = json.dumps({"query": consulta}).encode()
+    cab = {
+        "Authorization": f"Bearer {TOKEN}",
+        "User-Agent": "perfil-readme",
+        "Content-Type": "application/json",
+    }
+    req = urllib.request.Request("https://api.github.com/graphql", data=cuerpo, headers=cab)
+    with urllib.request.urlopen(req, timeout=20) as r:
+        return json.load(r)
+
+
+def obtener_estadisticas():
+    est = {
+        "repos": "-",
+        "contribuidos": "-",
+        "commits": "-",
+        "estrellas": "-",
+        "seguidores": "-",
+    }
     if USUARIO == "TU_USUARIO":
         return est
     try:
@@ -156,8 +173,23 @@ def obtener_estadísticas():
         est["estrellas"] = f"{estrellas:,}"
         c = _get(f"https://api.github.com/search/commits?q=author:{USUARIO}&per_page=1")
         est["commits"] = f"{c['total_count']:,}"
-    except (urllib.error.URLError, KeyError, ValueError) as e:
-        print(f"Aviso: no se pudieron obtener todas las estadísticas ({e})", file=sys.stderr)
+    except (OSError, KeyError, ValueError) as e:
+        print(f"Aviso: no se pudieron obtener todas las estadisticas ({e})", file=sys.stderr)
+
+    # Repos ajenos a los que ha contribuido (GraphQL exige token)
+    if TOKEN:
+        try:
+            g = _graphql(
+                'query { user(login: "%s") { repositoriesContributedTo(first: 1, '
+                "includeUserRepositories: false, contributionTypes: "
+                "[COMMIT, PULL_REQUEST, ISSUE, PULL_REQUEST_REVIEW]) { totalCount } } }" % USUARIO
+            )
+            total = g["data"]["user"]["repositoriesContributedTo"]["totalCount"]
+            est["contribuidos"] = f"{total:,}"
+        except (OSError, KeyError, TypeError, ValueError) as e:
+            print(f"Aviso: no se pudo obtener 'contribuido en' ({e})", file=sys.stderr)
+    else:
+        print("Aviso: sin GITHUB_TOKEN no se puede consultar 'contribuido en'", file=sys.stderr)
     return est
 
 
@@ -311,7 +343,7 @@ def main():
     if args.regen_ascii:
         generar_ascii(args.foto)
 
-    est = obtener_estadísticas()
+    est = obtener_estadisticas()
     for modo in ("dark", "light"):
         ruta = RAIZ / f"ascii_{modo}.txt"
         if not ruta.exists():
