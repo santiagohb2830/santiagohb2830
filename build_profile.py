@@ -42,8 +42,8 @@ PERFIL = [
     ("kv", "Lenguajes.Datos", "DAX, Power BI, ArcGIS"),
     ("kv", "Lenguajes.Reales", "Español, Inglés"),
     ("blank",),
-    ("kv", "Pasatiempos.Software", "Bots y automatizaciones con IA"),
-    ("kv", "Pasatiempos.Hardware", "Electrónica DIY, mecánica de moto"),
+    ("kv", "Pasatiempos.Software", "Bots y automatización con IA"),
+    ("kv", "Pasatiempos.Hardware", "Electrónica, mecánica de moto"),
     ("blank",),
     ("seccion", "Contacto"),
     ("kv", "Correo", "santiagohb2830@gmail.com"),
@@ -60,13 +60,13 @@ PERFIL = [
 # ----------------------------------------------------------------------
 # Medidas y tiempos
 # ----------------------------------------------------------------------
-COLS = 72            # columnas del retrato ASCII
-CW = 7.2             # ancho de caracter (px)
-LH = 13.4            # alto de linea del retrato (px)
-FS = 12              # tamano de fuente (px)
+COLS = 56            # columnas del retrato ASCII
+CW = 8.4             # ancho de caracter (px)
+LH = 15.6            # alto de linea del retrato (px)
+FS = 14              # tamano de fuente (px)
 MARGEN = 22
-ANCHO_INFO = 60      # caracteres por linea del panel derecho
-LH_INFO = 17.0
+ANCHO_INFO = 56      # caracteres por linea del panel derecho
+LH_INFO = 19.8
 PASO_ASCII = 0.07    # segundos entre filas del barrido
 T0_INFO = 0.35       # inicio del tecleo del panel derecho
 PASO_INFO = 0.13     # segundos entre lineas del panel derecho
