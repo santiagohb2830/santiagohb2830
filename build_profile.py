@@ -31,16 +31,16 @@ TOKEN = os.environ.get("GITHUB_TOKEN", "")
 TITULO = "santiago@hernandez"
 
 PERFIL = [
-    ("kv", "SO", "Windows, Ubuntu Server"),
+    ("kv", "SO", "Windows, Ubuntu Server, MacOS"),
     ("kv", "Host", "Pontificia Universidad Javeriana"),
     ("kv", "Kernel", "Ingeniería de Sistemas, 8vo semestre"),
     ("kv", "Enfoque", "Ciencia de Datos"),
-    ("kv", "Cargo", "AI Quality Analyst en Turing"),
-    ("kv", "IDE", "VS Code, IntelliJ IDEA"),
+    ("kv", "IDE", "VS Code, IntelliJ IDEA,"),
+    ("kv", "Herramientas", "Git, Docker, Postman, Google Colab, ClaudeCode, ChatGPT, Excel, Power BI, ArcGIS"),
     ("blank",),
-    ("kv", "Lenguajes.Programación", "Python, Java, C++"),
+    ("kv", "Lenguajes.Programación", "Python, Java, C++, SQL"),
     ("kv", "Lenguajes.Datos", "DAX, Power BI, ArcGIS"),
-    ("kv", "Lenguajes.Reales", "Español, Inglés"),
+    ("kv", "Lenguajes.naturales", "Español, Inglés"),
     ("blank",),
     ("kv", "Pasatiempos.Software", "Bots y automatización con IA"),
     ("kv", "Pasatiempos.Hardware", "Electrónica, mecánica de moto"),
